@@ -23,6 +23,7 @@ function App() {
   const [currentSong, setCurrentSong] = useState<Song | null>(null)
   const [status, setStatus] = useState<string>('STOPPED')
   const [errorMessage, setErrorMessage] = useState<string>('')
+  const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark')
   const [themeColors, setThemeColors] = useState({
     backgroundColor: '#121212',
     primaryColor: '#1DB954',
@@ -179,40 +180,52 @@ function App() {
     }
   }
 
-  return (
-    <main
-      style={{
-        backgroundColor: themeColors.backgroundColor,
-        color: themeColors.accentColor,
-        minHeight: '100vh',
-        padding: '1rem',
-      }}
-    >
-      <h1>Music Player</h1>
+  const toggleTheme = (): void => {
+    setThemeMode(themeMode === 'dark' ? 'light' : 'dark')
+  }
 
-      <CurrentSongCard song={currentSong} status={status} />
-      <PlayerControls
-        onPlay={handlePlay}
-        onPause={handlePause}
-        onResume={handleResume}
-        onStop={handleStop}
-        onNext={handleNext}
-        onPrevious={handlePrevious}
-      />
-      <PlaylistView
-        songs={songs}
-        currentSongId={currentSong ? currentSong.getId() : null}
-        onSelectSong={handleSelectSong}
-        onDeleteSong={handleDeleteSong}
-        onMoveSong={handleMoveSong}
-      />
-      <SongForm
-        onAddToStart={handleAddToStart}
-        onAddToEnd={handleAddToEnd}
-        onAddToPosition={handleAddToPosition}
-      />
-      {errorMessage && <p>{errorMessage}</p>}
-    </main>
+  return (
+    <div className={`app-shell ${themeMode}`}>
+      <header className="app-header">
+        <div className="app-header-text">
+          <h1>Music Player</h1>
+          <p className="app-subtitle">Manage and enjoy your music</p>
+        </div>
+        <button className="theme-toggle" onClick={toggleTheme} type="button">
+          {themeMode === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode'}
+        </button>
+      </header>
+
+      <div className="app-layout">
+        <aside className="left-column">
+          <PlaylistView
+            songs={songs}
+            currentSongId={currentSong ? currentSong.getId() : null}
+            onSelectSong={handleSelectSong}
+            onDeleteSong={handleDeleteSong}
+            onMoveSong={handleMoveSong}
+          />
+        </aside>
+
+        <main className="right-column">
+          <CurrentSongCard song={currentSong} status={status} />
+          <PlayerControls
+            onPlay={handlePlay}
+            onPause={handlePause}
+            onResume={handleResume}
+            onStop={handleStop}
+            onNext={handleNext}
+            onPrevious={handlePrevious}
+          />
+          <SongForm
+            onAddToStart={handleAddToStart}
+            onAddToEnd={handleAddToEnd}
+            onAddToPosition={handleAddToPosition}
+          />
+          {errorMessage && <div className="error-message">{errorMessage}</div>}
+        </main>
+      </div>
+    </div>
   )
 }
 

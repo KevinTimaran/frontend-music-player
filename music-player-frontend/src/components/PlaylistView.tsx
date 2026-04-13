@@ -18,58 +18,79 @@ export function PlaylistView({
 }: PlaylistViewProps) {
   const [targetPositions, setTargetPositions] = useState<Record<number, string>>({})
 
-  if (songs.length === 0) {
-    return <p>No songs in playlist</p>
-  }
-
   return (
-    <ul>
-      {songs.map((song, index) => {
-        const rawTarget = targetPositions[index]
-        const parsedTarget =
-          rawTarget === undefined || rawTarget.trim() === '' ? null : Number(rawTarget)
-        const canMove = parsedTarget !== null && !Number.isNaN(parsedTarget)
+    <div className="playlist-panel panel">
+      <h2 className="playlist-title">Playlist</h2>
+      {songs.length === 0 ? (
+        <p className="empty-playlist">No songs in playlist yet</p>
+      ) : (
+        <div className="playlist-list">
+          {songs.map((song, index) => {
+            const rawTarget = targetPositions[index]
+            const parsedTarget =
+              rawTarget === undefined || rawTarget.trim() === '' ? null : Number(rawTarget)
+            const canMove = parsedTarget !== null && !Number.isNaN(parsedTarget)
+            const isCurrentSong = song.getId() === currentSongId
 
-        return (
-          <li
-            key={song.getId()}
-            className={song.getId() === currentSongId ? 'current-song' : ''}
-          >
-            <span>
-              {song.getTitle()} - {song.getArtist()}{' '}
-              {song.getId() === currentSongId ? '(Current)' : ''}
-            </span>
-            <button type="button" onClick={() => onSelectSong(index)}>
-              Select
-            </button>
-            <button type="button" onClick={() => onDeleteSong(index)}>
-              Delete
-            </button>
-            <input
-              type="number"
-              placeholder="To"
-              value={targetPositions[index] ?? ''}
-              onChange={(event) =>
-                setTargetPositions((previous) => ({
-                  ...previous,
-                  [index]: event.target.value,
-                }))
-              }
-            />
-            <button
-              type="button"
-              disabled={!canMove}
-              onClick={() => {
-                if (parsedTarget !== null && !Number.isNaN(parsedTarget)) {
-                  onMoveSong(index, parsedTarget)
-                }
-              }}
-            >
-              Move
-            </button>
-          </li>
-        )
-      })}
-    </ul>
+            return (
+              <div
+                key={song.getId()}
+                className={`playlist-item ${isCurrentSong ? 'current' : ''}`}
+              >
+                <div className="playlist-item-info">
+                  <div className="playlist-item-title">
+                    {song.getTitle()}
+                    {isCurrentSong && <span className="current-badge">Now Playing</span>}
+                  </div>
+                  <div className="playlist-item-artist">{song.getArtist()}</div>
+                </div>
+                <div className="playlist-actions">
+                  <button
+                    type="button"
+                    className="action-button select-btn"
+                    onClick={() => onSelectSong(index)}
+                  >
+                    Select
+                  </button>
+                  <button
+                    type="button"
+                    className="action-button delete-btn"
+                    onClick={() => onDeleteSong(index)}
+                  >
+                    Delete
+                  </button>
+                  <div className="move-group">
+                    <input
+                      type="number"
+                      placeholder="Pos"
+                      className="move-input"
+                      value={targetPositions[index] ?? ''}
+                      onChange={(event) =>
+                        setTargetPositions((previous) => ({
+                          ...previous,
+                          [index]: event.target.value,
+                        }))
+                      }
+                    />
+                    <button
+                      type="button"
+                      className={`action-button move-btn ${canMove ? '' : 'disabled'}`}
+                      disabled={!canMove}
+                      onClick={() => {
+                        if (parsedTarget !== null && !Number.isNaN(parsedTarget)) {
+                          onMoveSong(index, parsedTarget)
+                        }
+                      }}
+                    >
+                      Move
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+      )}
+    </div>
   )
 }

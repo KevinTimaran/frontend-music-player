@@ -16,13 +16,29 @@ export function PlayerControls({
   onPrevious,
 }: PlayerControlsProps) {
   return (
-    <div>
-      <button type="button" onClick={onPlay}>Play</button>
-      <button type="button" onClick={onPause}>Pause</button>
-      <button type="button" onClick={onResume}>Resume</button>
-      <button type="button" onClick={onStop}>Stop</button>
-      <button type="button" onClick={onPrevious}>Previous</button>
-      <button type="button" onClick={onNext}>Next</button>
+    <div className="controls-bar">
+      <div className="controls-group">
+        <button type="button" className="control-button primary" onClick={onPrevious}>
+          ⏮️ Previous
+        </button>
+        <button type="button" className="control-button primary" onClick={onPlay}>
+          ▶️ Play
+        </button>
+        <button type="button" className="control-button primary" onClick={onNext}>
+          ⏭️ Next
+        </button>
+      </div>
+      <div className="controls-group">
+        <button type="button" className="control-button secondary" onClick={onPause}>
+          ⏸️ Pause
+        </button>
+        <button type="button" className="control-button secondary" onClick={onResume}>
+          ▶️ Resume
+        </button>
+        <button type="button" className="control-button secondary" onClick={onStop}>
+          ⏹️ Stop
+        </button>
+      </div>
     </div>
   )
 }
