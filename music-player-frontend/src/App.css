@@ -55,11 +55,19 @@
 
 html,
 body {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
     Arial, sans-serif;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
 }
 
 /* ============================================
@@ -76,6 +84,7 @@ body {
   --border: var(--light-border);
   --shadow: var(--light-shadow);
   min-height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
   background-color: var(--bg-primary);
@@ -93,6 +102,8 @@ body {
   --accent-light: var(--dark-accent-light);
   --border: var(--dark-border);
   --shadow: var(--dark-shadow);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .app-shell.light {

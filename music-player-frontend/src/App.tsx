@@ -39,6 +39,16 @@ function App() {
     refreshUI()
   }, [controller])
 
+  useEffect(() => {
+    const isDarkMode = themeMode === 'dark'
+    const globalBackground = isDarkMode ? '#0f0f0f' : '#f5f5f5'
+    const globalTextColor = isDarkMode ? '#ffffff' : '#121212'
+
+    document.body.style.backgroundColor = globalBackground
+    document.body.style.color = globalTextColor
+    document.documentElement.style.backgroundColor = globalBackground
+  }, [themeMode])
+
   const handleAddToStart = (song: Song): void => {
     try {
       controller.addSongToStart(song)
