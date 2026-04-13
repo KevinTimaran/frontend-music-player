@@ -1,0 +1,18 @@
+/* Component-specific styles will go here */
+
+.app-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+}
+
+.song-form,
+.playlist-view,
+.player-controls,
+.current-song-card {
+  padding: 20px;
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+
