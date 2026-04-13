@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type DragEvent } from 'react'
 import { Song } from '../domain/models/Song'
 
 interface PlaylistViewProps {
@@ -16,31 +16,62 @@ export function PlaylistView({
   onDeleteSong,
   onMoveSong,
 }: PlaylistViewProps) {
-  const [targetPositions, setTargetPositions] = useState<Record<number, string>>({})
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null)
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null)
+
+  const handleDragStart = (index: number): void => {
+    setDraggedIndex(index)
+  }
+
+  const handleDragOver = (event: DragEvent<HTMLDivElement>, index: number): void => {
+    event.preventDefault()
+    if (draggedIndex !== null && draggedIndex !== index) {
+      setDragOverIndex(index)
+    }
+  }
+
+  const handleDrop = (event: DragEvent<HTMLDivElement>, targetIndex: number): void => {
+    event.preventDefault()
+
+    if (draggedIndex !== null && draggedIndex !== targetIndex) {
+      onMoveSong(draggedIndex, targetIndex)
+    }
+
+    setDraggedIndex(null)
+    setDragOverIndex(null)
+  }
+
+  const handleDragEnd = (): void => {
+    setDraggedIndex(null)
+    setDragOverIndex(null)
+  }
 
   return (
     <div className="playlist-panel panel">
       <h2 className="playlist-title">Playlist</h2>
       {songs.length === 0 ? (
-        <p className="empty-playlist">No songs in playlist yet</p>
+        <p className="empty-playlist">No songs in playlist</p>
       ) : (
         <div className="playlist-list">
           {songs.map((song, index) => {
-            const rawTarget = targetPositions[index]
-            const parsedTarget =
-              rawTarget === undefined || rawTarget.trim() === '' ? null : Number(rawTarget)
-            const canMove = parsedTarget !== null && !Number.isNaN(parsedTarget)
             const isCurrentSong = song.getId() === currentSongId
+            const isDragging = draggedIndex === index
+            const isDragOver = dragOverIndex === index
 
             return (
               <div
                 key={song.getId()}
-                className={`playlist-item ${isCurrentSong ? 'current' : ''}`}
+                className={`playlist-item ${isCurrentSong ? 'current' : ''} ${isDragging ? 'dragging' : ''} ${isDragOver ? 'drag-over' : ''}`}
+                draggable
+                onDragStart={() => handleDragStart(index)}
+                onDragOver={(event) => handleDragOver(event, index)}
+                onDrop={(event) => handleDrop(event, index)}
+                onDragEnd={handleDragEnd}
               >
                 <div className="playlist-item-info">
                   <div className="playlist-item-title">
                     {song.getTitle()}
-                    {isCurrentSong && <span className="current-badge">Now Playing</span>}
+                    {isCurrentSong && <span className="current-badge">(Current)</span>}
                   </div>
                   <div className="playlist-item-artist">{song.getArtist()}</div>
                 </div>
@@ -59,32 +90,6 @@ export function PlaylistView({
                   >
                     Delete
                   </button>
-                  <div className="move-group">
-                    <input
-                      type="number"
-                      placeholder="Pos"
-                      className="move-input"
-                      value={targetPositions[index] ?? ''}
-                      onChange={(event) =>
-                        setTargetPositions((previous) => ({
-                          ...previous,
-                          [index]: event.target.value,
-                        }))
-                      }
-                    />
-                    <button
-                      type="button"
-                      className={`action-button move-btn ${canMove ? '' : 'disabled'}`}
-                      disabled={!canMove}
-                      onClick={() => {
-                        if (parsedTarget !== null && !Number.isNaN(parsedTarget)) {
-                          onMoveSong(index, parsedTarget)
-                        }
-                      }}
-                    >
-                      Move
-                    </button>
-                  </div>
                 </div>
               </div>
             )
