@@ -1,24 +1,13 @@
+import { Song } from '../models/Song'
+import { UITheme } from '../models/UITheme'
 import type { IThemeStrategy } from './IThemeStrategy'
-import type { UITheme } from '../models/UITheme'
 
-/**
- * Estrategia de tema por defecto
- * Clase que proporciona un tema predeterminado
- */
 export class DefaultThemeStrategy implements IThemeStrategy {
-  generateTheme(): UITheme {
-    return {
-      id: 'default',
-      name: 'Default',
-      primaryColor: '#6366f1',
-      secondaryColor: '#818cf8',
-      backgroundColor: '#1a1a1a',
-      textColor: '#ffffff',
-      accentColor: '#a78bfa',
+  public generateTheme(song: Song): UITheme {
+    if (!song) {
+      throw new Error('Song cannot be null.')
     }
-  }
 
-  getThemeName(): string {
-    return 'Default Theme'
+    return new UITheme('#1DB954', '#191414', '#FFFFFF', '#121212')
   }
 }

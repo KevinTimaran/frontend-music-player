@@ -1,11 +1,6 @@
-import type { UITheme } from '../models/UITheme'
-import type { Song } from '../models/Song'
+import { Song } from '../models/Song'
+import { UITheme } from '../models/UITheme'
 
-/**
- * Interfaz Strategy para temas
- * Define el contrato para diferentes estrategias de generación de temas
- */
 export interface IThemeStrategy {
-  generateTheme(song?: Song): UITheme
-  getThemeName(): string
+  generateTheme(song: Song): UITheme
 }

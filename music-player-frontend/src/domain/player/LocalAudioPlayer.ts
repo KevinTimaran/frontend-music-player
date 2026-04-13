@@ -1,59 +1,60 @@
+import { Song } from '../models/Song'
 import type { IMusicPlayer } from './IMusicPlayer'
 
-/**
- * Reproductor de audio local
- * Clase que implementa el reproductor usando elementos HTML5 Audio
- */
 export class LocalAudioPlayer implements IMusicPlayer {
-  private audioElement: HTMLAudioElement
-  private playing: boolean = false
+  private currentSong: Song | null
+  private volume: number
+  private status: string
 
   constructor() {
-    this.audioElement = new Audio()
+    this.currentSong = null
+    this.volume = 50
+    this.status = 'STOPPED'
   }
 
-  play(): void {
-    this.audioElement.play()
-    this.playing = true
+  public play(song: Song): void {
+    if (!song) {
+      throw new Error('Song cannot be null.')
+    }
+
+    this.currentSong = song
+    this.status = 'PLAYING'
   }
 
-  pause(): void {
-    this.audioElement.pause()
-    this.playing = false
+  public pause(): void {
+    if (this.status === 'PLAYING') {
+      this.status = 'PAUSED'
+    }
   }
 
-  stop(): void {
-    this.audioElement.pause()
-    this.audioElement.currentTime = 0
-    this.playing = false
+  public resume(): void {
+    if (this.status === 'PAUSED') {
+      this.status = 'PLAYING'
+    }
   }
 
-  resume(): void {
-    this.audioElement.play()
-    this.playing = true
+  public stop(): void {
+    this.status = 'STOPPED'
+    this.currentSong = null
   }
 
-  setVolume(volume: number): void {
-    this.audioElement.volume = Math.max(0, Math.min(1, volume))
+  public setVolume(volume: number): void {
+    if (volume < 0 || volume > 100) {
+      throw new Error('Volume must be between 0 and 100.')
+    }
+
+    this.volume = volume
   }
 
-  setCurrentTime(time: number): void {
-    this.audioElement.currentTime = time
+  public getStatus(): string {
+    return this.status
   }
 
-  getCurrentTime(): number {
-    return this.audioElement.currentTime
+  public getCurrentSong(): Song | null {
+    return this.currentSong
   }
 
-  getDuration(): number {
-    return this.audioElement.duration
-  }
-
-  loadAudio(audioUrl: string): void {
-    this.audioElement.src = audioUrl
-  }
-
-  isPlaying(): boolean {
-    return this.playing && !this.audioElement.paused
+  public getVolume(): number {
+    return this.volume
   }
 }

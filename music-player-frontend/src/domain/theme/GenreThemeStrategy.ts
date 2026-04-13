@@ -1,37 +1,33 @@
+import { Song } from '../models/Song'
+import { UITheme } from '../models/UITheme'
 import type { IThemeStrategy } from './IThemeStrategy'
-import type { UITheme } from '../models/UITheme'
-import type { Song } from '../models/Song'
 
-/**
- * Estrategia de tema basada en género
- * Clase que genera temas según el género de la canción
- */
 export class GenreThemeStrategy implements IThemeStrategy {
-  private genreColors: Record<string, { primary: string; secondary: string }> = {
-    'rock': { primary: '#dc2626', secondary: '#f87171' },
-    'pop': { primary: '#ec4899', secondary: '#f472b6' },
-    'jazz': { primary: '#0891b2', secondary: '#06b6d4' },
-    'classical': { primary: '#7c3aed', secondary: '#a78bfa' },
-    'electronic': { primary: '#22c55e', secondary: '#86efac' },
-    'default': { primary: '#6366f1', secondary: '#818cf8' },
-  }
-
-  generateTheme(song?: Song): UITheme {
-    const genre = song?.genre?.toLowerCase() || 'default'
-    const colors = this.genreColors[genre] || this.genreColors['default']
-
-    return {
-      id: `genre-${genre}`,
-      name: `${genre} Theme`,
-      primaryColor: colors.primary,
-      secondaryColor: colors.secondary,
-      backgroundColor: '#1a1a1a',
-      textColor: '#ffffff',
-      accentColor: colors.secondary,
+  public generateTheme(song: Song): UITheme {
+    if (!song) {
+      throw new Error('Song cannot be null.')
     }
-  }
 
-  getThemeName(): string {
-    return 'Genre Theme'
+    const genre = song.getGenre()
+
+    if (!genre || genre.trim().length === 0) {
+      return new UITheme('#1DB954', '#191414', '#FFFFFF', '#121212')
+    }
+
+    const normalizedGenre = genre.trim().toLowerCase()
+
+    if (normalizedGenre === 'rock') {
+      return new UITheme('#B71C1C', '#212121', '#FF5252', '#121212')
+    }
+
+    if (normalizedGenre === 'pop') {
+      return new UITheme('#EC407A', '#7B1FA2', '#F8BBD0', '#FCE4EC')
+    }
+
+    if (normalizedGenre === 'jazz') {
+      return new UITheme('#8D6E63', '#3E2723', '#D7CCC8', '#EFEBE9')
+    }
+
+    return new UITheme('#1DB954', '#191414', '#FFFFFF', '#121212')
   }
 }

@@ -1,61 +1,128 @@
+import { Song } from '../domain/models/Song'
+import { UITheme } from '../domain/models/UITheme'
 import type { IMusicPlayer } from '../domain/player/IMusicPlayer'
-import type { Playlist } from '../domain/structures/Playlist'
+import { Playlist } from '../domain/structures/Playlist'
 import type { IThemeStrategy } from '../domain/theme/IThemeStrategy'
 
-/**
- * Controlador del reproductor
- * Clase que orquesta la lógica de reproducción y playlist
- */
 export class PlayerController {
-  private player: IMusicPlayer | null = null
-  private playlist: Playlist | null = null
-  private themeStrategy: IThemeStrategy | null = null
+  private playlist: Playlist
+  private player: IMusicPlayer
+  private themeStrategy: IThemeStrategy
 
-  constructor(
-    player?: IMusicPlayer,
-    playlist?: Playlist,
-    themeStrategy?: IThemeStrategy
-  ) {
-    this.player = player || null
-    this.playlist = playlist || null
-    this.themeStrategy = themeStrategy || null
-  }
+  constructor(playlist: Playlist, player: IMusicPlayer, themeStrategy: IThemeStrategy) {
+    if (!playlist) {
+      throw new Error('Playlist cannot be null or undefined.')
+    }
 
-  setPlayer(player: IMusicPlayer): void {
-    this.player = player
-  }
+    if (!player) {
+      throw new Error('Player cannot be null or undefined.')
+    }
 
-  setPlaylist(playlist: Playlist): void {
+    if (!themeStrategy) {
+      throw new Error('Theme strategy cannot be null or undefined.')
+    }
+
     this.playlist = playlist
+    this.player = player
+    this.themeStrategy = themeStrategy
   }
 
-  setThemeStrategy(strategy: IThemeStrategy): void {
-    this.themeStrategy = strategy
+  public addSongToStart(song: Song): void {
+    this.playlist.addFirst(song)
   }
 
-  getThemeStrategy(): IThemeStrategy | null {
-    return this.themeStrategy
+  public addSongToEnd(song: Song): void {
+    this.playlist.addLast(song)
   }
 
-  playCurrentSong(): void {
-    if (this.player && this.playlist) {
-      const song = this.playlist.getCurrentSong()
-      if (song) {
-        this.player.loadAudio(song.audioUrl)
-        this.player.play()
-      }
+  public addSongToPosition(song: Song, position: number): void {
+    this.playlist.addAt(song, position)
+  }
+
+  public deleteSongAt(position: number): void {
+    this.playlist.removeAt(position)
+  }
+
+  public deleteSongById(songId: string): void {
+    this.playlist.removeById(songId)
+  }
+
+  public moveSong(from: number, to: number): void {
+    this.playlist.move(from, to)
+  }
+
+  public playCurrent(): void {
+    const song = this.playlist.getCurrentSong()
+    if (song) {
+      this.player.play(song)
     }
   }
 
-  pauseSong(): void {
-    this.player?.pause()
+  public playNext(): Song | null {
+    const song = this.playlist.nextSong()
+    if (song) {
+      this.player.play(song)
+    }
+
+    return song
   }
 
-  nextSong(): void {
-    // Placeholder para lógica de siguiente canción
+  public playPrevious(): Song | null {
+    const song = this.playlist.previousSong()
+    if (song) {
+      this.player.play(song)
+    }
+
+    return song
   }
 
-  previousSong(): void {
-    // Placeholder para lógica de canción anterior
+  public pausePlayback(): void {
+    this.player.pause()
+  }
+
+  public resumePlayback(): void {
+    this.player.resume()
+  }
+
+  public stopPlayback(): void {
+    this.player.stop()
+  }
+
+  public selectSong(position: number): Song | null {
+    const song = this.playlist.setCurrent(position)
+    if (song) {
+      this.player.play(song)
+    }
+
+    return song
+  }
+
+  public getCurrentSong(): Song | null {
+    return this.playlist.getCurrentSong()
+  }
+
+  public getPlaylistSongs(): Song[] {
+    return this.playlist.toArray()
+  }
+
+  public getPlayerStatus(): string {
+    return this.player.getStatus()
+  }
+
+  public changeThemeStrategy(strategy: IThemeStrategy): void {
+    if (!strategy) {
+      throw new Error('Theme strategy cannot be null or undefined.')
+    }
+
+    this.themeStrategy = strategy
+  }
+
+  public getThemeForCurrentSong(): UITheme | null {
+    const song = this.playlist.getCurrentSong()
+    if (!song) {
+      return null
+    }
+
+    return this.themeStrategy.generateTheme(song)
   }
 }

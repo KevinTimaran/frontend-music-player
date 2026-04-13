@@ -1,15 +1,37 @@
-import type { Song } from '../models/Song'
+import { Song } from '../models/Song'
 
-/**
- * Nodo para lista doblemente enlazada
- * Clase que representa un nodo en la estructura de playlist
- */
 export class SongNode {
-  song: Song
-  next: SongNode | null = null
-  prev: SongNode | null = null
+  private song: Song
+  private prev: SongNode | null
+  private next: SongNode | null
 
   constructor(song: Song) {
+    if (!song) {
+      throw new Error('Song cannot be null.')
+    }
+
     this.song = song
+    this.prev = null
+    this.next = null
+  }
+
+  public getSong(): Song {
+    return this.song
+  }
+
+  public getPrev(): SongNode | null {
+    return this.prev
+  }
+
+  public getNext(): SongNode | null {
+    return this.next
+  }
+
+  public setPrev(prev: SongNode | null): void {
+    this.prev = prev
+  }
+
+  public setNext(next: SongNode | null): void {
+    this.next = next
   }
 }
