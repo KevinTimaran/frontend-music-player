@@ -23,7 +23,7 @@ function App() {
   const [currentSong, setCurrentSong] = useState<Song | null>(null)
   const [status, setStatus] = useState<string>('STOPPED')
   const [errorMessage, setErrorMessage] = useState<string>('')
-  const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark')
+  const [themeMode, setThemeMode] = useState<'dark' | 'light'>('light')
 
   const refreshUI = (): void => {
     const refreshedSongs = controller.getPlaylistSongs()
@@ -170,9 +170,38 @@ function App() {
           <h1>Music Player</h1>
           <p className="app-subtitle">Manage and enjoy your music</p>
         </div>
-        <button className="theme-toggle" onClick={toggleTheme} type="button">
-          {themeMode === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode'}
-        </button>
+        <div className="theme-switch-wrapper">
+          <span className="theme-toggle-caption">
+            {themeMode === 'dark' ? 'Dark Mode' : 'Light Mode'}
+          </span>
+          <label className="theme-switch" aria-label="Toggle light and dark mode">
+            <input
+              type="checkbox"
+              className="theme-switch__checkbox"
+              checked={themeMode === 'dark'}
+              onChange={toggleTheme}
+            />
+            <div className="theme-switch__container">
+              <div className="theme-switch__stars-container" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2.5L13.6 6.5L17.5 8.1L13.6 9.7L12 13.6L10.4 9.7L6.5 8.1L10.4 6.5L12 2.5Z" />
+                  <path d="M18.5 12L19.3 14L21.3 14.8L19.3 15.6L18.5 17.6L17.7 15.6L15.7 14.8L17.7 14L18.5 12Z" />
+                  <path d="M5.5 13.5L6.3 15.5L8.3 16.3L6.3 17.1L5.5 19.1L4.7 17.1L2.7 16.3L4.7 15.5L5.5 13.5Z" />
+                </svg>
+              </div>
+              <div className="theme-switch__clouds" aria-hidden="true" />
+              <div className="theme-switch__circle-container" aria-hidden="true">
+                <div className="theme-switch__sun-moon-container">
+                  <div className="theme-switch__moon">
+                    <div className="theme-switch__spot" />
+                    <div className="theme-switch__spot" />
+                    <div className="theme-switch__spot" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </label>
+        </div>
       </header>
 
       <div className="app-layout">
