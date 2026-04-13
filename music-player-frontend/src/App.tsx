@@ -24,36 +24,15 @@ function App() {
   const [status, setStatus] = useState<string>('STOPPED')
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [themeMode, setThemeMode] = useState<'dark' | 'light'>('dark')
-  const [themeColors, setThemeColors] = useState({
-    backgroundColor: '#121212',
-    primaryColor: '#1DB954',
-    accentColor: '#FFFFFF',
-  })
 
   const refreshUI = (): void => {
     const refreshedSongs = controller.getPlaylistSongs()
     const refreshedCurrentSong = controller.getCurrentSong()
     const refreshedStatus = controller.getPlayerStatus()
-    const theme = controller.getThemeForCurrentSong()
 
     setSongs(refreshedSongs)
     setCurrentSong(refreshedCurrentSong)
     setStatus(refreshedStatus)
-
-    if (theme) {
-      setThemeColors({
-        backgroundColor: theme.getBackgroundColor(),
-        primaryColor: theme.getPrimaryColor(),
-        accentColor: theme.getAccentColor(),
-      })
-      return
-    }
-
-    setThemeColors({
-      backgroundColor: '#121212',
-      primaryColor: '#1DB954',
-      accentColor: '#FFFFFF',
-    })
   }
 
   useEffect(() => {
