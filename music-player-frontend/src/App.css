@@ -907,11 +907,27 @@ body {
   transition: all var(--transition-normal);
   gap: var(--spacing-md);
   flex-wrap: wrap;
+  cursor: grab;
+}
+
+.playlist-item:active {
+  cursor: grabbing;
 }
 
 .playlist-item:hover {
   background-color: var(--border);
   border-color: var(--accent);
+}
+
+.playlist-item.dragging {
+  opacity: 0.55;
+  transform: scale(0.985);
+}
+
+.playlist-item.drag-over {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 40%, transparent);
+  background-color: color-mix(in srgb, var(--accent) 12%, var(--bg-tertiary));
 }
 
 .playlist-item.current {
