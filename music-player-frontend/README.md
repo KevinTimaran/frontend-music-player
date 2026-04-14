@@ -125,8 +125,4 @@ npm run build
 - Autoavance al terminar una canción.
 - Cambios visuales de interfaz (tema claro/oscuro, visualizador).
 
-## Notas académicas de sustentación
 
-- La implementación de lista doble es real y no depende de arrays como estructura primaria.
-- toArray en Playlist se usa para presentar datos en frontend.
-- Si se requiere cumplimiento estricto del punto agregar en cualquier posición desde UI, se recomienda añadir campo de índice en SongForm y llamar a addSongToPosition.
