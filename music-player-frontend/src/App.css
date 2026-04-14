@@ -1092,6 +1092,33 @@ body {
   grid-column: 1 / -1;
 }
 
+.file-upload-section {
+  border-style: dashed;
+}
+
+.form-file-input {
+  padding: var(--spacing-sm);
+  cursor: pointer;
+}
+
+.form-file-input::file-selector-button {
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: var(--spacing-xs) var(--spacing-md);
+  margin-right: var(--spacing-sm);
+  background-color: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.file-count {
+  margin-top: var(--spacing-sm);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
 .form-label {
   color: var(--text-secondary);
   font-size: 0.875rem;

@@ -49,9 +49,11 @@ function App() {
     document.documentElement.style.backgroundColor = globalBackground
   }, [themeMode])
 
-  const handleAddToStart = (song: Song): void => {
+  const handleAddManyToStart = (songsToAdd: Song[]): void => {
     try {
-      controller.addSongToStart(song)
+      songsToAdd.forEach((song) => {
+        controller.addSongToStart(song)
+      })
       setErrorMessage('')
       refreshUI()
     } catch (error) {
@@ -59,9 +61,11 @@ function App() {
     }
   }
 
-  const handleAddToEnd = (song: Song): void => {
+  const handleAddManyToEnd = (songsToAdd: Song[]): void => {
     try {
-      controller.addSongToEnd(song)
+      songsToAdd.forEach((song) => {
+        controller.addSongToEnd(song)
+      })
       setErrorMessage('')
       refreshUI()
     } catch (error) {
@@ -69,9 +73,12 @@ function App() {
     }
   }
 
-  const handleAddToPosition = (song: Song, position: number): void => {
+  const handleAddManyToPosition = (songsToAdd: Song[], position: number): void => {
     try {
-      controller.addSongToPosition(song, position)
+      songsToAdd.forEach((song, index) => {
+        const adjustedPosition = position + index
+        controller.addSongToPosition(song, adjustedPosition)
+      })
       setErrorMessage('')
       refreshUI()
     } catch (error) {
@@ -236,9 +243,9 @@ function App() {
             onPrevious={handlePrevious}
           />
           <SongForm
-            onAddToStart={handleAddToStart}
-            onAddToEnd={handleAddToEnd}
-            onAddToPosition={handleAddToPosition}
+            onAddManyToStart={handleAddManyToStart}
+            onAddManyToEnd={handleAddManyToEnd}
+            onAddManyToPosition={handleAddManyToPosition}
           />
           {errorMessage && <div className="error-message">{errorMessage}</div>}
         </main>
