@@ -166,7 +166,7 @@ export class Playlist {
 
   public move(from: number, to: number): void {
     this.validatePositionForExistingElement(from)
-    this.validatePositionForExistingElement(to)
+    this.validatePositionForMoveTarget(to)
 
     if (from === to) {
       return
@@ -175,12 +175,13 @@ export class Playlist {
     const nodeToMove = this.getNodeAt(from)!
     const songToMove = nodeToMove.getSong()
     const wasCurrent = this.current === nodeToMove
+    const adjustedTarget = from < to ? to - 1 : to
 
     this.removeAt(from)
-    this.addAt(songToMove, to)
+    this.addAt(songToMove, adjustedTarget)
 
     if (wasCurrent) {
-      this.current = this.getNodeAt(to)
+      this.current = this.getNodeAt(adjustedTarget)
     }
   }
 
@@ -285,6 +286,12 @@ export class Playlist {
   private validatePositionForExistingElement(position: number): void {
     if (position < 0 || position >= this.size) {
       throw new Error('Position out of range for existing element.')
+    }
+  }
+
+  private validatePositionForMoveTarget(position: number): void {
+    if (position < 0 || position > this.size) {
+      throw new Error('Position out of range for move operation.')
     }
   }
 }

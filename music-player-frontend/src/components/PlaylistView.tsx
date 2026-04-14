@@ -41,6 +41,17 @@ export function PlaylistView({
     setDragOverIndex(null)
   }
 
+  const handleDropAtEnd = (event: DragEvent<HTMLDivElement>): void => {
+    event.preventDefault()
+
+    if (draggedIndex !== null) {
+      onMoveSong(draggedIndex, songs.length)
+    }
+
+    setDraggedIndex(null)
+    setDragOverIndex(null)
+  }
+
   const handleDragEnd = (): void => {
     setDraggedIndex(null)
     setDragOverIndex(null)
@@ -94,6 +105,13 @@ export function PlaylistView({
               </div>
             )
           })}
+          <div
+            className={`playlist-drop-zone ${draggedIndex !== null ? 'active' : ''}`}
+            onDragOver={(event) => event.preventDefault()}
+            onDrop={handleDropAtEnd}
+          >
+            Drop here to move to the end
+          </div>
         </div>
       )}
     </div>

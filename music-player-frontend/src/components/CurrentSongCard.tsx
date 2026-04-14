@@ -26,19 +26,25 @@ const getStatusDisplay = (status: string): string => {
 
 export function CurrentSongCard({ song, status }: CurrentSongCardProps) {
   const isPlaybackActive = status === 'PLAYING' || status === 'RESUMED'
-  const waveStateClass = isPlaybackActive ? 'playing' : status === 'PAUSED' ? 'paused' : 'stopped'
-  const baseWaveHeights = [24, 44, 58, 36, 66, 48, 72, 40, 62, 50, 34, 68, 42, 56, 38, 60, 46, 30]
+  const visualStateClass = isPlaybackActive ? 'playing' : status === 'PAUSED' ? 'paused' : 'stopped'
+  const ringHeights = [18, 32, 56, 28, 62, 44, 72, 36, 54, 68, 30, 60, 40, 52, 34, 66, 42, 58]
 
   if (!song) {
     return (
       <div className="current-song-card current-song-empty">
         <div className="no-song-placeholder">
-          <div className="audio-wave-visualizer stopped" aria-hidden="true">
-            {Array.from({ length: 16 }, (_, index) => (
+          <div className="audio-circle-visualizer stopped" aria-hidden="true">
+            <div className="audio-circle-disc">
+              <div className="audio-circle-core" />
+            </div>
+            {Array.from({ length: 18 }, (_, index) => (
               <span
                 key={`empty-wave-${index}`}
-                className="wave-bar stopped"
-                style={{ '--wave-index': index, '--wave-height': `${baseWaveHeights[index % baseWaveHeights.length]}%` } as CSSProperties}
+                className="circle-bar stopped"
+                style={{
+                  '--circle-index': index,
+                  '--circle-height': `${ringHeights[index % ringHeights.length]}%`,
+                } as CSSProperties}
               />
             ))}
           </div>
@@ -49,23 +55,32 @@ export function CurrentSongCard({ song, status }: CurrentSongCardProps) {
     )
   }
 
-  const waveBars = Array.from({ length: 18 }, (_, index) => (
+  const circleBars = Array.from({ length: 18 }, (_, index) => (
     <span
-      key={`wave-bar-${index}`}
-      className={`wave-bar ${waveStateClass}`}
-      style={{ '--wave-index': index, '--wave-height': `${baseWaveHeights[index % baseWaveHeights.length]}%` } as CSSProperties}
+      key={`circle-bar-${index}`}
+      className={`circle-bar ${visualStateClass}`}
+      style={{
+        '--circle-index': index,
+        '--circle-height': `${ringHeights[index % ringHeights.length]}%`,
+      } as CSSProperties}
     />
   ))
 
   return (
-    <div className={`current-song-card current-song-card-${waveStateClass}`}>
+    <div className={`current-song-card current-song-card-${visualStateClass}`}>
       <div className="current-song-topline">
         <span className="current-song-context">Now Playing</span>
         <span className={`current-song-state state-${status.toLowerCase()}`}>{getStatusDisplay(status)}</span>
       </div>
 
-      <div className={`audio-wave-visualizer ${waveStateClass}`} aria-hidden="true">
-        {waveBars}
+      <div className={`audio-circle-visualizer ${visualStateClass}`} aria-hidden="true">
+        <div className="audio-circle-orbit audio-circle-orbit-outer" />
+        <div className="audio-circle-orbit audio-circle-orbit-inner" />
+        <div className="audio-circle-disc">
+          <div className="audio-circle-disc-glow" />
+          <div className="audio-circle-core" />
+        </div>
+        <div className="audio-circle-bars">{circleBars}</div>
       </div>
 
       <div className="current-song-info" role="status" aria-live="polite">
