@@ -192,28 +192,26 @@ export function NowPlayingCard({
                   <span>Previous</span>
                 </div>
               </div>
-              <label
-                className={`container media-button primary play-stop-toggle ${isPlaying ? 'is-active' : ''} ${!hasSongs ? 'is-disabled' : ''}`}
-                role="button"
-                tabIndex={hasSongs ? 0 : -1}
-                aria-label={isPlaying ? 'Stop playback' : 'Play current song'}
-                onClick={handlePlayStopToggle}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter' || event.key === ' ') {
-                    event.preventDefault()
-                    handlePlayStopToggle()
-                  }
-                }}
-              >
-                <input type="checkbox" checked={isPlaying} readOnly />
-                <svg className="play" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M8 6L19 12L8 18V6Z" fill="currentColor" />
-                </svg>
-                <svg className="pause" viewBox="0 0 24 24" aria-hidden="true">
-                  <rect x="8" y="8" width="8" height="8" rx="1.5" fill="currentColor" />
-                </svg>
-                <span className="toggle-label">{isPlaying ? 'Stop' : 'Play'}</span>
-              </label>
+              <div className="button-container">
+                <div className="button-border" />
+                <div className="button">
+                  <button
+                    type="button"
+                    className="real-button"
+                    onClick={handlePlayStopToggle}
+                    disabled={!hasSongs}
+                    title={isPlaying ? 'Stop playback' : 'Play current song'}
+                    aria-label={isPlaying ? 'Stop playback' : 'Play current song'}
+                  />
+                  <div className="backdrop" />
+                  <div className="spin">
+                    <div className="spin-blur" />
+                    <div className="spin-intense" />
+                    <div className="spin-inside" />
+                  </div>
+                  <span>{isPlaying ? 'Stop' : 'Play'}</span>
+                </div>
+              </div>
               <div className="button-container">
                 <div className="button-border" />
                 <div className="button">
@@ -367,28 +365,26 @@ export function NowPlayingCard({
                 <span>Previous</span>
               </div>
             </div>
-            <label
-              className={`container media-button primary play-stop-toggle ${isPlaying ? 'is-active' : ''} ${!hasSongs ? 'is-disabled' : ''}`}
-              role="button"
-              tabIndex={hasSongs ? 0 : -1}
-              aria-label={isPlaying ? 'Stop playback' : 'Play current song'}
-              onClick={handlePlayStopToggle}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
-                  event.preventDefault()
-                  handlePlayStopToggle()
-                }
-              }}
-            >
-              <input type="checkbox" checked={isPlaying} readOnly />
-              <svg className="play" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M8 6L19 12L8 18V6Z" fill="currentColor" />
-              </svg>
-              <svg className="pause" viewBox="0 0 24 24" aria-hidden="true">
-                <rect x="8" y="8" width="8" height="8" rx="1.5" fill="currentColor" />
-              </svg>
-              <span className="toggle-label">{isPlaying ? 'Stop' : 'Play'}</span>
-            </label>
+            <div className="button-container">
+              <div className="button-border" />
+              <div className="button">
+                <button
+                  type="button"
+                  className="real-button"
+                  onClick={handlePlayStopToggle}
+                  disabled={!hasSongs}
+                  title={isPlaying ? 'Stop playback' : 'Play current song'}
+                  aria-label={isPlaying ? 'Stop playback' : 'Play current song'}
+                />
+                <div className="backdrop" />
+                <div className="spin">
+                  <div className="spin-blur" />
+                  <div className="spin-intense" />
+                  <div className="spin-inside" />
+                </div>
+                <span>{isPlaying ? 'Stop' : 'Play'}</span>
+              </div>
+            </div>
             <div className="button-container">
               <div className="button-border" />
               <div className="button">
