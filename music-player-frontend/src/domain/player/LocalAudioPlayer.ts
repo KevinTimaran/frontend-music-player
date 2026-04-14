@@ -6,15 +6,26 @@ export class LocalAudioPlayer implements IMusicPlayer {
   private volume: number
   private status: string
   private audio: HTMLAudioElement
+  private onEndedCallback: (() => void) | null
 
   constructor() {
     this.currentSong = null
     this.volume = 50
     this.status = 'STOPPED'
+    this.onEndedCallback = null
     this.audio = new Audio()
     this.audio.volume = this.volume / 100
     this.audio.addEventListener('ended', () => {
       this.status = 'STOPPED'
+      this.currentSong = null
+
+      if (this.onEndedCallback) {
+        try {
+          this.onEndedCallback()
+        } catch (error) {
+          console.error('Failed to handle ended playback:', error)
+        }
+      }
     })
   }
 
@@ -64,6 +75,10 @@ export class LocalAudioPlayer implements IMusicPlayer {
     this.audio.currentTime = 0
     this.status = 'STOPPED'
     this.currentSong = null
+  }
+
+  public setOnEnded(callback: (() => void) | null): void {
+    this.onEndedCallback = callback
   }
 
   public setVolume(volume: number): void {

@@ -43,6 +43,27 @@ function App() {
   }, [controller])
 
   useEffect(() => {
+    const handleSongEnded = (): void => {
+      const nextSong = controller.playNext()
+
+      if (!nextSong) {
+        controller.stopPlayback()
+      }
+
+      setCurrentTime(player.getCurrentTime())
+      setDuration(player.getDuration())
+      setVolume(player.getVolume())
+      refreshUI()
+    }
+
+    player.setOnEnded(handleSongEnded)
+
+    return () => {
+      player.setOnEnded(null)
+    }
+  }, [controller, player])
+
+  useEffect(() => {
     const intervalId = window.setInterval(() => {
       const liveStatus = player.getStatus()
       const liveCurrentTime = player.getCurrentTime()

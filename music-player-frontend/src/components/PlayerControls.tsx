@@ -1,3 +1,5 @@
+import { type CSSProperties } from 'react'
+
 interface PlayerControlsProps {
   onPlay: () => void
   onPause: () => void
@@ -22,6 +24,18 @@ const formatTime = (timeInSeconds: number): string => {
   return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
 }
 
+const createSliderStyle = (valuePercentage: number): CSSProperties => {
+  const clampedValue = Math.max(0, Math.min(100, valuePercentage))
+
+  return {
+    background: `linear-gradient(90deg,
+      color-mix(in srgb, var(--accent) 92%, white) 0%,
+      color-mix(in srgb, var(--accent) 92%, white) ${clampedValue}%,
+      color-mix(in srgb, var(--bg-tertiary) 90%, transparent) ${clampedValue}%,
+      color-mix(in srgb, var(--bg-tertiary) 90%, transparent) 100%)`,
+  }
+}
+
 export function PlayerControls({
   onPlay,
   onPause,
@@ -43,6 +57,7 @@ export function PlayerControls({
   const safeDuration = Number.isFinite(duration) ? Math.max(duration, 0) : 0
   const safeCurrentTime = Number.isFinite(currentTime) ? Math.max(currentTime, 0) : 0
   const clampedCurrentTime = safeDuration > 0 ? Math.min(safeCurrentTime, safeDuration) : safeCurrentTime
+  const progressPercent = safeDuration > 0 ? (clampedCurrentTime / safeDuration) * 100 : 0
 
   return (
     <div className="controls-bar">
@@ -53,7 +68,7 @@ export function PlayerControls({
 
       <div className="track-controls-panel">
         <label className="slider-label" htmlFor="progress-range">Track Progress</label>
-        <div className="range-row">
+        <div className="range-row track-progress-row">
           <span className="range-time">{formatTime(clampedCurrentTime)}</span>
           <input
             id="progress-range"
@@ -63,7 +78,8 @@ export function PlayerControls({
             step={0.1}
             value={safeDuration > 0 ? clampedCurrentTime : 0}
             onChange={(event) => onSeek(Number(event.target.value))}
-            className="progress-range"
+            className="volume-slider progress-slider"
+            style={createSliderStyle(progressPercent)}
             disabled={!hasSongs || safeDuration <= 0}
             aria-label="Seek song position"
           />
@@ -71,10 +87,16 @@ export function PlayerControls({
         </div>
       </div>
 
-      <div className="track-controls-panel">
+      <div className="track-controls-panel volume-control">
         <label className="slider-label" htmlFor="volume-range">Volume</label>
         <div className="range-row volume-row">
-          <span className="volume-icon" aria-hidden="true">🔉</span>
+          <span className="volume-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M4 10V14H8L13 18V6L8 10H4Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+              <path d="M16 9C17.5 10.5 17.5 13.5 16 15" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+              <path d="M18.8 6.2C21.2 8.6 21.2 15.4 18.8 17.8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+            </svg>
+          </span>
           <input
             id="volume-range"
             type="range"
@@ -83,7 +105,8 @@ export function PlayerControls({
             step={1}
             value={Math.max(0, Math.min(100, volume))}
             onChange={(event) => onVolumeChange(Number(event.target.value))}
-            className="volume-range"
+            className="volume-slider"
+            style={createSliderStyle(volume)}
             aria-label="Adjust volume"
           />
           <span className="range-time volume-value">{Math.round(volume)}%</span>

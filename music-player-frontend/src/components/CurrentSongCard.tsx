@@ -26,57 +26,52 @@ const getStatusDisplay = (status: string): string => {
 
 export function CurrentSongCard({ song, status }: CurrentSongCardProps) {
   const isPlaybackActive = status === 'PLAYING' || status === 'RESUMED'
+  const waveStateClass = isPlaybackActive ? 'playing' : status === 'PAUSED' ? 'paused' : 'stopped'
+  const baseWaveHeights = [24, 44, 58, 36, 66, 48, 72, 40, 62, 50, 34, 68, 42, 56, 38, 60, 46, 30]
 
   if (!song) {
     return (
-      <div className="current-song-card">
+      <div className="current-song-card current-song-empty">
         <div className="no-song-placeholder">
-          <div className="audio-visualizer is-idle" aria-hidden="true">
-            <div className="visualizer-ring visualizer-ring-1" />
-            <div className="visualizer-ring visualizer-ring-2" />
-            <div className="visualizer-ring visualizer-ring-3" />
-            <div className="visualizer-core">
-              <span className="visualizer-center-dot" />
-            </div>
+          <div className="audio-wave-visualizer stopped" aria-hidden="true">
+            {Array.from({ length: 16 }, (_, index) => (
+              <span
+                key={`empty-wave-${index}`}
+                className="wave-bar stopped"
+                style={{ '--wave-index': index, '--wave-height': `${baseWaveHeights[index % baseWaveHeights.length]}%` } as CSSProperties}
+              />
+            ))}
           </div>
-          <h2>No song selected</h2>
-          <p>Choose a song from the playlist or add a new one</p>
+          <h2 className="current-song-title">No song selected</h2>
+          <p className="current-song-artist">Choose a song from the playlist or add a new one</p>
         </div>
       </div>
     )
   }
 
-  const visualizerBars = Array.from({ length: 24 }, (_, index) => (
+  const waveBars = Array.from({ length: 18 }, (_, index) => (
     <span
-      key={`viz-bar-${index}`}
-      className="visualizer-bar"
-      style={{ '--bar-index': index } as CSSProperties}
+      key={`wave-bar-${index}`}
+      className={`wave-bar ${waveStateClass}`}
+      style={{ '--wave-index': index, '--wave-height': `${baseWaveHeights[index % baseWaveHeights.length]}%` } as CSSProperties}
     />
   ))
 
   return (
-    <div className="current-song-card">
-      <div className="hero-status-row">
-        <span className="hero-status-label">Now Playing</span>
-        <span className={`hero-status-pill status-${status.toLowerCase()}`}>{getStatusDisplay(status)}</span>
+    <div className={`current-song-card current-song-card-${waveStateClass}`}>
+      <div className="current-song-topline">
+        <span className="current-song-context">Now Playing</span>
+        <span className={`current-song-state state-${status.toLowerCase()}`}>{getStatusDisplay(status)}</span>
       </div>
 
-      <div className={`audio-visualizer ${isPlaybackActive ? 'is-active' : 'is-idle'}`} aria-hidden="true">
-        <div className="visualizer-ring visualizer-ring-1" />
-        <div className="visualizer-ring visualizer-ring-2" />
-        <div className="visualizer-ring visualizer-ring-3" />
-        <div className="visualizer-bars">
-          {visualizerBars}
-        </div>
-        <div className="visualizer-core">
-          <span className="visualizer-center-dot" />
-        </div>
+      <div className={`audio-wave-visualizer ${waveStateClass}`} aria-hidden="true">
+        {waveBars}
       </div>
 
-      <div className="hero-song-info" role="status" aria-live="polite">
-        <h2 className="hero-song-title">{song.getTitle()}</h2>
-        <p className="hero-song-artist">{song.getArtist()}</p>
-        <div className="hero-song-submeta">
+      <div className="current-song-info" role="status" aria-live="polite">
+        <h2 className="current-song-title">{song.getTitle()}</h2>
+        <p className="current-song-artist">{song.getArtist()}</p>
+        <div className="current-song-meta">
           <span>{song.getGenre()}</span>
           <span className="submeta-dot" aria-hidden="true">•</span>
           <span>{formatDuration(song.getDuration())}</span>
