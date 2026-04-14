@@ -72,9 +72,7 @@ export class LocalAudioPlayer implements IMusicPlayer {
 
   public stop(): void {
     this.audio.pause()
-    this.audio.currentTime = 0
     this.status = 'STOPPED'
-    this.currentSong = null
   }
 
   public setOnEnded(callback: (() => void) | null): void {

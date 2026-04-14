@@ -4,8 +4,7 @@ import { LocalAudioPlayer } from './domain/player/LocalAudioPlayer'
 import { DefaultThemeStrategy } from './domain/theme/DefaultThemeStrategy'
 import { PlayerController } from './application/PlayerController'
 import { Song } from './domain/models/Song'
-import { CurrentSongCard } from './components/CurrentSongCard'
-import { PlayerControls } from './components/PlayerControls'
+import { NowPlayingCard } from './components/NowPlayingCard'
 import { PlaylistView } from './components/PlaylistView'
 import { SongForm } from './components/SongForm'
 import './App.css'
@@ -273,19 +272,19 @@ function App() {
         </aside>
 
         <main className="right-column">
-          <CurrentSongCard song={currentSong} status={status} />
-          <PlayerControls
+          <NowPlayingCard
+            song={currentSong}
+            status={status}
+            hasSongs={songs.length > 0}
+            currentTime={currentTime}
+            duration={duration}
+            volume={volume}
             onPlay={handlePlay}
             onStop={handleStop}
             onNext={handleNext}
             onPrevious={handlePrevious}
             onSeek={handleSeek}
             onVolumeChange={handleVolumeChange}
-            status={status}
-            hasSongs={songs.length > 0}
-            currentTime={currentTime}
-            duration={duration}
-            volume={volume}
           />
           <SongForm
             onAddManyToStart={handleAddManyToStart}

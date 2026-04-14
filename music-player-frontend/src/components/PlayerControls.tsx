@@ -130,16 +130,26 @@ export function PlayerControls({
         </div>
 
         <div className="controls-row">
-          <button
-            type="button"
-            className="media-button primary"
-            onClick={onPrevious}
-            disabled={!hasSongs}
-            title="Play previous song"
-          >
-            <span aria-hidden="true">⏮️</span>
-            <span>Previous</span>
-          </button>
+          <div className="button-container">
+            <div className="button-border" />
+            <div className="button">
+              <button
+                type="button"
+                className="real-button"
+                onClick={onPrevious}
+                disabled={!hasSongs}
+                title="Play previous song"
+                aria-label="Play previous song"
+              />
+              <div className="backdrop" />
+              <div className="spin">
+                <div className="spin-blur" />
+                <div className="spin-intense" />
+                <div className="spin-inside" />
+              </div>
+              <span>Previous</span>
+            </div>
+          </div>
           <label
             className={`container media-button primary play-stop-toggle ${isPlaying ? 'is-active' : ''} ${!hasSongs ? 'is-disabled' : ''}`}
             role="button"
@@ -162,16 +172,26 @@ export function PlayerControls({
             </svg>
             <span className="toggle-label">{isPlaying ? 'Stop' : 'Play'}</span>
           </label>
-          <button
-            type="button"
-            className="media-button primary"
-            onClick={onNext}
-            disabled={!hasSongs}
-            title="Play next song"
-          >
-            <span aria-hidden="true">⏭️</span>
-            <span>Next</span>
-          </button>
+          <div className="button-container">
+            <div className="button-border" />
+            <div className="button">
+              <button
+                type="button"
+                className="real-button"
+                onClick={onNext}
+                disabled={!hasSongs}
+                title="Play next song"
+                aria-label="Play next song"
+              />
+              <div className="backdrop" />
+              <div className="spin">
+                <div className="spin-blur" />
+                <div className="spin-intense" />
+                <div className="spin-inside" />
+              </div>
+              <span>Next</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
