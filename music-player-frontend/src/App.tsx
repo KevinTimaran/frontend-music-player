@@ -228,6 +228,8 @@ function App() {
             onStop={handleStop}
             onNext={handleNext}
             onPrevious={handlePrevious}
+            status={status}
+            hasSongs={songs.length > 0}
           />
           <SongForm
             onAddManyToStart={handleAddManyToStart}

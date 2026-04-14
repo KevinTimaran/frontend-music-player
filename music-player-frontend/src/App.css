@@ -798,6 +798,52 @@ body {
   box-shadow: 0 4px 12px var(--shadow);
 }
 
+.controls-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+}
+
+.controls-title {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--text-primary);
+  letter-spacing: 0.02em;
+}
+
+.controls-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 92px;
+  padding: 0.28rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+}
+
+.controls-status.status-playing {
+  background-color: color-mix(in srgb, var(--accent) 25%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 65%, transparent);
+  color: var(--accent);
+}
+
+.controls-status.status-paused {
+  background-color: color-mix(in srgb, #ffd166 20%, transparent);
+  border-color: color-mix(in srgb, #ffd166 60%, transparent);
+  color: #b98a0d;
+}
+
+.controls-status.status-stopped {
+  background-color: color-mix(in srgb, #ef476f 16%, transparent);
+  border-color: color-mix(in srgb, #ef476f 45%, transparent);
+  color: #e23963;
+}
+
 .controls-group {
   display: flex;
   gap: var(--spacing-md);
@@ -814,6 +860,7 @@ body {
   cursor: pointer;
   transition: all var(--transition-normal);
   white-space: nowrap;
+  outline: none;
 }
 
 .control-button.primary {
@@ -841,6 +888,37 @@ body {
 .control-button.secondary:hover {
   background-color: var(--border);
   color: var(--accent);
+}
+
+.control-button:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+.control-button.is-active {
+  position: relative;
+  transform: translateY(-1px);
+}
+
+.control-button.is-active::after {
+  content: '';
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: -6px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.control-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.control-button:disabled::after {
+  content: none;
 }
 
 /* ============================================
@@ -1284,6 +1362,11 @@ body {
     gap: var(--spacing-sm);
   }
 
+  .controls-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .control-button {
     padding: var(--spacing-sm) var(--spacing-md);
     font-size: 0.85rem;
@@ -1356,6 +1439,11 @@ body {
 
   .controls-group {
     gap: var(--spacing-xs);
+  }
+
+  .controls-status {
+    min-width: 80px;
+    font-size: 0.7rem;
   }
 
   .control-button {
