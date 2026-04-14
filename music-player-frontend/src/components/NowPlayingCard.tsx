@@ -172,66 +172,36 @@ export function NowPlayingCard({
             </div>
 
             <div className="controls-row">
-              <div className="button-container">
-                <div className="button-border" />
-                <div className="button">
-                  <button
-                    type="button"
-                    className="real-button"
-                    onClick={onPrevious}
-                    disabled={!hasSongs}
-                    title="Play previous song"
-                    aria-label="Play previous song"
-                  />
-                  <div className="backdrop" />
-                  <div className="spin">
-                    <div className="spin-blur" />
-                    <div className="spin-intense" />
-                    <div className="spin-inside" />
-                  </div>
-                  <span>Previous</span>
-                </div>
-              </div>
-              <div className="button-container">
-                <div className="button-border" />
-                <div className="button">
-                  <button
-                    type="button"
-                    className="real-button"
-                    onClick={handlePlayStopToggle}
-                    disabled={!hasSongs}
-                    title={isPlaying ? 'Stop playback' : 'Play current song'}
-                    aria-label={isPlaying ? 'Stop playback' : 'Play current song'}
-                  />
-                  <div className="backdrop" />
-                  <div className="spin">
-                    <div className="spin-blur" />
-                    <div className="spin-intense" />
-                    <div className="spin-inside" />
-                  </div>
-                  <span>{isPlaying ? 'Stop' : 'Play'}</span>
-                </div>
-              </div>
-              <div className="button-container">
-                <div className="button-border" />
-                <div className="button">
-                  <button
-                    type="button"
-                    className="real-button"
-                    onClick={onNext}
-                    disabled={!hasSongs}
-                    title="Play next song"
-                    aria-label="Play next song"
-                  />
-                  <div className="backdrop" />
-                  <div className="spin">
-                    <div className="spin-blur" />
-                    <div className="spin-intense" />
-                    <div className="spin-inside" />
-                  </div>
-                  <span>Next</span>
-                </div>
-              </div>
+              <button
+                type="button"
+                className="beautiful-button"
+                onClick={onPrevious}
+                disabled={!hasSongs}
+                title="Play previous song"
+                aria-label="Play previous song"
+              >
+                ⏮ Previous
+              </button>
+              <button
+                type="button"
+                className="beautiful-button"
+                onClick={handlePlayStopToggle}
+                disabled={!hasSongs}
+                title={isPlaying ? 'Stop playback' : 'Play current song'}
+                aria-label={isPlaying ? 'Stop playback' : 'Play current song'}
+              >
+                {isPlaying ? '⏹ Stop' : '▶ Play'}
+              </button>
+              <button
+                type="button"
+                className="beautiful-button"
+                onClick={onNext}
+                disabled={!hasSongs}
+                title="Play next song"
+                aria-label="Play next song"
+              >
+                Next ⏭
+              </button>
             </div>
           </div>
         </div>
@@ -345,66 +315,36 @@ export function NowPlayingCard({
           </div>
 
           <div className="controls-row">
-            <div className="button-container">
-              <div className="button-border" />
-              <div className="button">
-                <button
-                  type="button"
-                  className="real-button"
-                  onClick={onPrevious}
-                  disabled={!hasSongs}
-                  title="Play previous song"
-                  aria-label="Play previous song"
-                />
-                <div className="backdrop" />
-                <div className="spin">
-                  <div className="spin-blur" />
-                  <div className="spin-intense" />
-                  <div className="spin-inside" />
-                </div>
-                <span>Previous</span>
-              </div>
-            </div>
-            <div className="button-container">
-              <div className="button-border" />
-              <div className="button">
-                <button
-                  type="button"
-                  className="real-button"
-                  onClick={handlePlayStopToggle}
-                  disabled={!hasSongs}
-                  title={isPlaying ? 'Stop playback' : 'Play current song'}
-                  aria-label={isPlaying ? 'Stop playback' : 'Play current song'}
-                />
-                <div className="backdrop" />
-                <div className="spin">
-                  <div className="spin-blur" />
-                  <div className="spin-intense" />
-                  <div className="spin-inside" />
-                </div>
-                <span>{isPlaying ? 'Stop' : 'Play'}</span>
-              </div>
-            </div>
-            <div className="button-container">
-              <div className="button-border" />
-              <div className="button">
-                <button
-                  type="button"
-                  className="real-button"
-                  onClick={onNext}
-                  disabled={!hasSongs}
-                  title="Play next song"
-                  aria-label="Play next song"
-                />
-                <div className="backdrop" />
-                <div className="spin">
-                  <div className="spin-blur" />
-                  <div className="spin-intense" />
-                  <div className="spin-inside" />
-                </div>
-                <span>Next</span>
-              </div>
-            </div>
+            <button
+              type="button"
+              className="beautiful-button"
+              onClick={onPrevious}
+              disabled={!hasSongs}
+              title="Play previous song"
+              aria-label="Play previous song"
+            >
+              ⏮ Previous
+            </button>
+            <button
+              type="button"
+              className="beautiful-button"
+              onClick={handlePlayStopToggle}
+              disabled={!hasSongs}
+              title={isPlaying ? 'Stop playback' : 'Play current song'}
+              aria-label={isPlaying ? 'Stop playback' : 'Play current song'}
+            >
+              {isPlaying ? '⏹ Stop' : '▶ Play'}
+            </button>
+            <button
+              type="button"
+              className="beautiful-button"
+              onClick={onNext}
+              disabled={!hasSongs}
+              title="Play next song"
+              aria-label="Play next song"
+            >
+              Next ⏭
+            </button>
           </div>
         </div>
       </div>
