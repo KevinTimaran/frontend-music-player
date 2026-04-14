@@ -4,7 +4,6 @@ import { Song } from '../domain/models/Song'
 interface SongFormProps {
   onAddManyToStart: (songs: Song[]) => void
   onAddManyToEnd: (songs: Song[]) => void
-  onAddManyToPosition: (songs: Song[], position: number) => void
 }
 
 const audioExtensions = new Set([
@@ -81,12 +80,7 @@ const getAudioDurationInSeconds = (sourceUrl: string): Promise<number> => {
 export function SongForm({
   onAddManyToStart,
   onAddManyToEnd,
-  onAddManyToPosition,
 }: SongFormProps) {
-  const [title, setTitle] = useState('')
-  const [artist, setArtist] = useState('')
-  const [genre, setGenre] = useState('')
-  const [position, setPosition] = useState('')
   const [selectedAudioFiles, setSelectedAudioFiles] = useState<File[]>([])
   const [error, setError] = useState('')
 
@@ -107,10 +101,9 @@ export function SongForm({
     const normalizedFileName = file.name.replace(/\s+/g, '-').toLowerCase()
 
     const generatedId = `${Date.now()}-${index}-${normalizedFileName}`
-    const fallbackTitle = getFileNameWithoutExtension(file.name)
-    const mappedTitle = title.trim().length > 0 ? title.trim() : fallbackTitle
-    const mappedArtist = artist.trim().length > 0 ? artist.trim() : 'Unknown Artist'
-    const mappedGenre = genre.trim().length > 0 ? genre.trim() : 'Unknown'
+    const mappedTitle = getFileNameWithoutExtension(file.name)
+    const mappedArtist = 'Unknown Artist'
+    const mappedGenre = 'Unknown'
 
     return new Song(
       generatedId,
@@ -134,10 +127,6 @@ export function SongForm({
   }
 
   const clearForm = (): void => {
-    setTitle('')
-    setArtist('')
-    setGenre('')
-    setPosition('')
     setSelectedAudioFiles([])
     setError('')
 
@@ -170,63 +159,9 @@ export function SongForm({
     }
   }
 
-  const handleAddFilesToPosition = async (): Promise<void> => {
-    try {
-      const parsedPosition = Number(position)
-      if (!Number.isInteger(parsedPosition) || parsedPosition < 0) {
-        throw new Error('Position must be a non-negative integer.')
-      }
-
-      const songs = await buildSongsFromSelection()
-      onAddManyToPosition(songs, parsedPosition)
-      clearForm()
-    } catch (caughtError) {
-      setError(caughtError instanceof Error ? caughtError.message : 'Failed to process files.')
-    }
-  }
-
   return (
     <div className="song-form-panel panel">
       <h2 className="form-title">Add Song</h2>
-
-      <div className="form-section">
-        <h3 className="section-title">Song Details</h3>
-        <div className="song-form-grid">
-          <div className="form-group">
-            <label className="form-label" htmlFor="song-title">Title *</label>
-            <input
-              id="song-title"
-              type="text"
-              className="form-input"
-              placeholder="Song title"
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label" htmlFor="song-artist">Artist *</label>
-            <input
-              id="song-artist"
-              type="text"
-              className="form-input"
-              placeholder="Artist name"
-              value={artist}
-              onChange={(event) => setArtist(event.target.value)}
-            />
-          </div>
-          <div className="form-group">
-            <label className="form-label" htmlFor="song-genre">Genre</label>
-            <input
-              id="song-genre"
-              type="text"
-              className="form-input"
-              placeholder="e.g., Rock, Pop"
-              value={genre}
-              onChange={(event) => setGenre(event.target.value)}
-            />
-          </div>
-        </div>
-      </div>
 
       <div className="form-section file-upload-section">
         <h3 className="section-title">Local Audio Files</h3>
@@ -261,21 +196,6 @@ export function SongForm({
         <p className="file-count">Selected valid audio files: {selectedAudioFiles.length}</p>
       </div>
 
-      <div className="form-section">
-        <h3 className="section-title">Position</h3>
-        <div className="form-group">
-          <label className="form-label" htmlFor="song-position">Add at Position (optional)</label>
-          <input
-            id="song-position"
-            type="number"
-            className="form-input"
-            placeholder="Leave empty to add at end"
-            value={position}
-            onChange={(event) => setPosition(event.target.value)}
-          />
-        </div>
-      </div>
-
       {error && <div className="form-error">{error}</div>}
 
       <div className="form-actions">
@@ -284,13 +204,6 @@ export function SongForm({
         </button>
         <button type="button" className="form-button primary" onClick={handleAddFilesToEnd}>
           Add Files to End
-        </button>
-        <button
-          type="button"
-          className="form-button secondary"
-          onClick={handleAddFilesToPosition}
-        >
-          Add Files to Position
         </button>
       </div>
     </div>

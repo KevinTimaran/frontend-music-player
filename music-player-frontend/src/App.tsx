@@ -73,19 +73,6 @@ function App() {
     }
   }
 
-  const handleAddManyToPosition = (songsToAdd: Song[], position: number): void => {
-    try {
-      songsToAdd.forEach((song, index) => {
-        const adjustedPosition = position + index
-        controller.addSongToPosition(song, adjustedPosition)
-      })
-      setErrorMessage('')
-      refreshUI()
-    } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : 'Unexpected error')
-    }
-  }
-
   const handlePlay = (): void => {
     try {
       controller.playCurrent()
@@ -245,7 +232,6 @@ function App() {
           <SongForm
             onAddManyToStart={handleAddManyToStart}
             onAddManyToEnd={handleAddManyToEnd}
-            onAddManyToPosition={handleAddManyToPosition}
           />
           {errorMessage && <div className="error-message">{errorMessage}</div>}
         </main>
