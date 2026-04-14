@@ -1,3 +1,4 @@
+import { type CSSProperties } from 'react'
 import { Song } from '../domain/models/Song'
 
 interface CurrentSongCardProps {
@@ -15,30 +16,29 @@ const formatDuration = (durationInSeconds: number): string => {
 
 const getStatusDisplay = (status: string): string => {
   const statusMap: Record<string, string> = {
-    PLAYING: '▶️ Playing',
-    PAUSED: '⏸️ Paused',
-    STOPPED: '⏹️ Stopped',
-    RESUMED: '▶️ Resumed',
+    PLAYING: 'Playing',
+    PAUSED: 'Paused',
+    STOPPED: 'Stopped',
+    RESUMED: 'Resumed',
   }
   return statusMap[status] || status
 }
 
-const getPlaybackHeading = (status: string): string => {
-  if (status === 'RESUMED') {
-    return 'Resumed'
-  }
-
-  return 'Now Playing'
-}
-
 export function CurrentSongCard({ song, status }: CurrentSongCardProps) {
-  const normalizedStatusClass = `status-${status.toLowerCase()}`
   const isPlaybackActive = status === 'PLAYING' || status === 'RESUMED'
 
   if (!song) {
     return (
       <div className="current-song-card">
         <div className="no-song-placeholder">
+          <div className="audio-visualizer is-idle" aria-hidden="true">
+            <div className="visualizer-ring visualizer-ring-1" />
+            <div className="visualizer-ring visualizer-ring-2" />
+            <div className="visualizer-ring visualizer-ring-3" />
+            <div className="visualizer-core">
+              <span className="visualizer-center-dot" />
+            </div>
+          </div>
           <h2>No song selected</h2>
           <p>Choose a song from the playlist or add a new one</p>
         </div>
@@ -46,59 +46,49 @@ export function CurrentSongCard({ song, status }: CurrentSongCardProps) {
     )
   }
 
+  const visualizerBars = Array.from({ length: 24 }, (_, index) => (
+    <span
+      key={`viz-bar-${index}`}
+      className="visualizer-bar"
+      style={{ '--bar-index': index } as CSSProperties}
+    />
+  ))
+
   return (
     <div className="current-song-card">
-      <h2 className="current-song-title">{song.getTitle()}</h2>
-      <div className="current-song-meta">
-        <div className="meta-row">
-          <span className="meta-label">Artist</span>
-          <span className="meta-value">{song.getArtist()}</span>
+      <div className="hero-status-row">
+        <span className="hero-status-label">Now Playing</span>
+        <span className={`hero-status-pill status-${status.toLowerCase()}`}>{getStatusDisplay(status)}</span>
+      </div>
+
+      <div className={`audio-visualizer ${isPlaybackActive ? 'is-active' : 'is-idle'}`} aria-hidden="true">
+        <div className="visualizer-ring visualizer-ring-1" />
+        <div className="visualizer-ring visualizer-ring-2" />
+        <div className="visualizer-ring visualizer-ring-3" />
+        <div className="visualizer-bars">
+          {visualizerBars}
         </div>
-        <div className="meta-row">
-          <span className="meta-label">Genre</span>
-          <span className="meta-value">{song.getGenre()}</span>
-        </div>
-        <div className="meta-row">
-          <span className="meta-label">Duration</span>
-          <span className="meta-value">{formatDuration(song.getDuration())}</span>
+        <div className="visualizer-core">
+          <span className="visualizer-center-dot" />
         </div>
       </div>
-      {isPlaybackActive && (
-        <div className="now-playing-main" role="status" aria-live="polite">
-          <div className="now-playing-current">
-            <div className="now-playing-icon" aria-hidden="true">
-              <div className="now-playing-play" />
-            </div>
-            <div>
-              <p className="now-playing-heading">{getPlaybackHeading(status)}</p>
-              <p className="now-playing-song">{song.getTitle()}</p>
-              <p className="now-playing-artist">{song.getArtist()}</p>
-            </div>
-          </div>
-          <div className="now-playing-loader" aria-hidden="true">
-            <span className="now-load" />
-            <span className="now-load" />
-            <span className="now-load" />
-            <span className="now-load" />
-          </div>
+
+      <div className="hero-song-info" role="status" aria-live="polite">
+        <h2 className="hero-song-title">{song.getTitle()}</h2>
+        <p className="hero-song-artist">{song.getArtist()}</p>
+        <div className="hero-song-submeta">
+          <span>{song.getGenre()}</span>
+          <span className="submeta-dot" aria-hidden="true">•</span>
+          <span>{formatDuration(song.getDuration())}</span>
+          {isPlaybackActive && (
+            <span className="hero-active-indicator" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+            </span>
+          )}
+          {isPlaybackActive && <span className="hero-active-text">Live</span>}
         </div>
-      )}
-      <div className="current-song-status">
-        <button
-          type="button"
-          className={`status-action-button ${normalizedStatusClass}`}
-          aria-label={`Current status: ${getStatusDisplay(status)}`}
-        >
-          <span className="dots_border" />
-          <span className="sparkle" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none">
-              <path className="path" d="M12 3.5L13.8 8.2L18.5 10L13.8 11.8L12 16.5L10.2 11.8L5.5 10L10.2 8.2L12 3.5Z" />
-              <path className="path" d="M18.5 2.5L19.4 4.8L21.7 5.7L19.4 6.6L18.5 8.9L17.6 6.6L15.3 5.7L17.6 4.8L18.5 2.5Z" />
-              <path className="path" d="M4.8 14.4L5.8 17L8.4 18L5.8 19L4.8 21.6L3.8 19L1.2 18L3.8 17L4.8 14.4Z" />
-            </svg>
-          </span>
-          <span className="text_button">{getStatusDisplay(status)}</span>
-        </button>
       </div>
     </div>
   )

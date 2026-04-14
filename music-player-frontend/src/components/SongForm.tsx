@@ -172,11 +172,29 @@ export function SongForm({
               ref={filesInputRef}
               id="audio-files"
               type="file"
-              className="form-input form-file-input"
+              className="visually-hidden-file-input"
               accept="audio/*"
               multiple
               onChange={handleFilesSelection}
             />
+            <button
+              type="button"
+              className="Documents-btn"
+              onClick={() => filesInputRef.current?.click()}
+            >
+              <span className="folderContainer" aria-hidden="true">
+                <svg className="fileBack" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0 4C0 1.79 1.79 0 4 0H58L74 18H142C144.21 18 146 19.79 146 22V109C146 111.21 144.21 113 142 113H4C1.79 113 0 111.21 0 109V4Z" fill="currentColor" />
+                </svg>
+                <svg className="filePage" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 0H58L88 30V95C88 97.21 86.21 99 84 99H12C9.79 99 8 97.21 8 95V4C8 1.79 9.79 0 12 0Z" fill="currentColor" />
+                </svg>
+                <svg className="fileFront" viewBox="0 0 160 112" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 16C8 11.58 11.58 8 16 8H66L84 30H144C148.42 30 152 33.58 152 38V96C152 100.42 148.42 104 144 104H16C11.58 104 8 100.42 8 96V16Z" fill="currentColor" />
+                </svg>
+              </span>
+              <span className="text documents-btn-text">Elegir archivos</span>
+            </button>
           </div>
           <div className="form-group full-width">
             <label className="form-label" htmlFor="audio-folder">Select folder</label>
@@ -184,12 +202,30 @@ export function SongForm({
               ref={folderInputRef}
               id="audio-folder"
               type="file"
-              className="form-input form-file-input"
+              className="visually-hidden-file-input"
               accept="audio/*"
               multiple
               {...folderInputAttributes}
               onChange={handleFilesSelection}
             />
+            <button
+              type="button"
+              className="Documents-btn"
+              onClick={() => folderInputRef.current?.click()}
+            >
+              <span className="folderContainer" aria-hidden="true">
+                <svg className="fileBack" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M0 4C0 1.79 1.79 0 4 0H58L74 18H142C144.21 18 146 19.79 146 22V109C146 111.21 144.21 113 142 113H4C1.79 113 0 111.21 0 109V4Z" fill="currentColor" />
+                </svg>
+                <svg className="filePage" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 0H58L88 30V95C88 97.21 86.21 99 84 99H12C9.79 99 8 97.21 8 95V4C8 1.79 9.79 0 12 0Z" fill="currentColor" />
+                </svg>
+                <svg className="fileFront" viewBox="0 0 160 112" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M8 16C8 11.58 11.58 8 16 8H66L84 30H144C148.42 30 152 33.58 152 38V96C152 100.42 148.42 104 144 104H16C11.58 104 8 100.42 8 96V16Z" fill="currentColor" />
+                </svg>
+              </span>
+              <span className="text documents-btn-text">Elegir carpeta</span>
+            </button>
           </div>
         </div>
 

@@ -83,6 +83,32 @@ export class LocalAudioPlayer implements IMusicPlayer {
     return this.currentSong
   }
 
+  public getCurrentTime(): number {
+    return Number.isFinite(this.audio.currentTime) ? this.audio.currentTime : 0
+  }
+
+  public getDuration(): number {
+    if (Number.isFinite(this.audio.duration) && this.audio.duration > 0) {
+      return this.audio.duration
+    }
+
+    if (this.currentSong) {
+      return this.currentSong.getDuration()
+    }
+
+    return 0
+  }
+
+  public seekTo(seconds: number): void {
+    if (!Number.isFinite(seconds)) {
+      return
+    }
+
+    const maxDuration = this.getDuration()
+    const clampedSeconds = Math.max(0, maxDuration > 0 ? Math.min(seconds, maxDuration) : seconds)
+    this.audio.currentTime = clampedSeconds
+  }
+
   public getVolume(): number {
     return this.volume
   }

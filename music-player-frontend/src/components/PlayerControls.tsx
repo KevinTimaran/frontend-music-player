@@ -5,8 +5,21 @@ interface PlayerControlsProps {
   onStop: () => void
   onNext: () => void
   onPrevious: () => void
+  onSeek: (seconds: number) => void
+  onVolumeChange: (volume: number) => void
   status: string
   hasSongs: boolean
+  currentTime: number
+  duration: number
+  volume: number
+}
+
+const formatTime = (timeInSeconds: number): string => {
+  const totalSeconds = Number.isFinite(timeInSeconds) ? Math.max(0, Math.floor(timeInSeconds)) : 0
+  const minutes = Math.floor(totalSeconds / 60)
+  const seconds = totalSeconds % 60
+
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
 }
 
 export function PlayerControls({
@@ -16,18 +29,65 @@ export function PlayerControls({
   onStop,
   onNext,
   onPrevious,
+  onSeek,
+  onVolumeChange,
   status,
   hasSongs,
+  currentTime,
+  duration,
+  volume,
 }: PlayerControlsProps) {
   const isPlaying = status === 'PLAYING'
   const isPaused = status === 'PAUSED'
   const isStopped = status === 'STOPPED'
+  const safeDuration = Number.isFinite(duration) ? Math.max(duration, 0) : 0
+  const safeCurrentTime = Number.isFinite(currentTime) ? Math.max(currentTime, 0) : 0
+  const clampedCurrentTime = safeDuration > 0 ? Math.min(safeCurrentTime, safeDuration) : safeCurrentTime
 
   return (
     <div className="controls-bar">
       <div className="controls-header">
         <h3 className="controls-title">Playback Controls</h3>
         <span className={`controls-status status-${status.toLowerCase()}`}>{status}</span>
+      </div>
+
+      <div className="track-controls-panel">
+        <label className="slider-label" htmlFor="progress-range">Track Progress</label>
+        <div className="range-row">
+          <span className="range-time">{formatTime(clampedCurrentTime)}</span>
+          <input
+            id="progress-range"
+            type="range"
+            min={0}
+            max={Math.max(0, safeDuration)}
+            step={0.1}
+            value={safeDuration > 0 ? clampedCurrentTime : 0}
+            onChange={(event) => onSeek(Number(event.target.value))}
+            className="progress-range"
+            disabled={!hasSongs || safeDuration <= 0}
+            aria-label="Seek song position"
+          />
+          <span className="range-time">{formatTime(safeDuration)}</span>
+        </div>
+      </div>
+
+      <div className="track-controls-panel">
+        <label className="slider-label" htmlFor="volume-range">Volume</label>
+        <div className="range-row volume-row">
+          <span className="volume-icon" aria-hidden="true">🔉</span>
+          <input
+            id="volume-range"
+            type="range"
+            min={0}
+            max={100}
+            step={1}
+            value={Math.max(0, Math.min(100, volume))}
+            onChange={(event) => onVolumeChange(Number(event.target.value))}
+            className="volume-range"
+            aria-label="Adjust volume"
+          />
+          <span className="range-time volume-value">{Math.round(volume)}%</span>
+        </div>
       </div>
 
       <div className="controls-group">
@@ -38,7 +98,8 @@ export function PlayerControls({
           disabled={!hasSongs}
           title="Play previous song"
         >
-          ⏮️ Previous
+          <span aria-hidden="true">⏮️</span>
+          <span>Previous</span>
         </button>
         <button
           type="button"
@@ -47,7 +108,8 @@ export function PlayerControls({
           disabled={!hasSongs || isPlaying}
           title="Play current song"
         >
-          ▶️ Play
+          <span aria-hidden="true">▶️</span>
+          <span>Play</span>
         </button>
         <button
           type="button"
@@ -56,7 +118,8 @@ export function PlayerControls({
           disabled={!hasSongs}
           title="Play next song"
         >
-          ⏭️ Next
+          <span aria-hidden="true">⏭️</span>
+          <span>Next</span>
         </button>
       </div>
 
@@ -68,7 +131,8 @@ export function PlayerControls({
           disabled={!hasSongs || !isPlaying}
           title="Pause playback"
         >
-          ⏸️ Pause
+          <span aria-hidden="true">⏸️</span>
+          <span>Pause</span>
         </button>
         <button
           type="button"
@@ -77,7 +141,8 @@ export function PlayerControls({
           disabled={!hasSongs || !isPaused}
           title="Resume playback"
         >
-          ▶️ Resume
+          <span aria-hidden="true">⏵</span>
+          <span>Resume</span>
         </button>
         <button
           type="button"
@@ -86,7 +151,8 @@ export function PlayerControls({
           disabled={!hasSongs || isStopped}
           title="Stop playback"
         >
-          ⏹️ Stop
+          <span aria-hidden="true">⏹️</span>
+          <span>Stop</span>
         </button>
       </div>
     </div>

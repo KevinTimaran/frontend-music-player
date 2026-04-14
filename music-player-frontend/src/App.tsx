@@ -22,6 +22,9 @@ function App() {
   const [songs, setSongs] = useState<Song[]>([])
   const [currentSong, setCurrentSong] = useState<Song | null>(null)
   const [status, setStatus] = useState<string>('STOPPED')
+  const [currentTime, setCurrentTime] = useState<number>(0)
+  const [duration, setDuration] = useState<number>(0)
+  const [volume, setVolume] = useState<number>(player.getVolume())
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [themeMode, setThemeMode] = useState<'dark' | 'light'>('light')
 
@@ -38,6 +41,24 @@ function App() {
   useEffect(() => {
     refreshUI()
   }, [controller])
+
+  useEffect(() => {
+    const intervalId = window.setInterval(() => {
+      const liveStatus = player.getStatus()
+      const liveCurrentTime = player.getCurrentTime()
+      const liveDuration = player.getDuration()
+      const liveVolume = player.getVolume()
+
+      setStatus((previousStatus) => (previousStatus === liveStatus ? previousStatus : liveStatus))
+      setCurrentTime(liveCurrentTime)
+      setDuration(liveDuration)
+      setVolume(liveVolume)
+    }, 250)
+
+    return () => {
+      window.clearInterval(intervalId)
+    }
+  }, [player])
 
   useEffect(() => {
     const isDarkMode = themeMode === 'dark'
@@ -163,6 +184,21 @@ function App() {
     }
   }
 
+  const handleSeek = (seconds: number): void => {
+    player.seekTo(seconds)
+    setCurrentTime(seconds)
+  }
+
+  const handleVolumeChange = (nextVolume: number): void => {
+    try {
+      player.setVolume(nextVolume)
+      setVolume(nextVolume)
+      setErrorMessage('')
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Unexpected error')
+    }
+  }
+
   const toggleTheme = (): void => {
     setThemeMode(themeMode === 'dark' ? 'light' : 'dark')
   }
@@ -228,8 +264,13 @@ function App() {
             onStop={handleStop}
             onNext={handleNext}
             onPrevious={handlePrevious}
+            onSeek={handleSeek}
+            onVolumeChange={handleVolumeChange}
             status={status}
             hasSongs={songs.length > 0}
+            currentTime={currentTime}
+            duration={duration}
+            volume={volume}
           />
           <SongForm
             onAddManyToStart={handleAddManyToStart}
