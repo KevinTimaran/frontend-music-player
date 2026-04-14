@@ -96,10 +96,13 @@ export function PlaylistView({
                   </button>
                   <button
                     type="button"
-                    className="action-button delete-btn"
+                    className="button"
                     onClick={() => onDeleteSong(index)}
+                    aria-label={`Delete ${song.getTitle()}`}
                   >
-                    Delete
+                    <svg viewBox="0 0 448 512" className="svgIcon" aria-hidden="true">
+                      <path d="M135.2 17.7C140.6 7.1 151.5 0 163.5 0H284.5C296.5 0 307.4 7.1 312.8 17.7L320 32H432C440.8 32 448 39.2 448 48C448 56.8 440.8 64 432 64H16C7.2 64 0 56.8 0 48C0 39.2 7.2 32 16 32H128L135.2 17.7ZM53.2 467C54.8 492.1 75.7 512 100.8 512H347.2C372.3 512 393.2 492.1 394.8 467L416 128H32L53.2 467Z" />
+                    </svg>
                   </button>
                 </div>
               </div>

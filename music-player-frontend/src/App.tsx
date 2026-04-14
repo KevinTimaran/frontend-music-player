@@ -125,26 +125,6 @@ function App() {
     }
   }
 
-  const handlePause = (): void => {
-    try {
-      controller.pausePlayback()
-      setErrorMessage('')
-      refreshUI()
-    } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : 'Unexpected error')
-    }
-  }
-
-  const handleResume = (): void => {
-    try {
-      controller.resumePlayback()
-      setErrorMessage('')
-      refreshUI()
-    } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : 'Unexpected error')
-    }
-  }
-
   const handleStop = (): void => {
     try {
       controller.stopPlayback()
@@ -228,7 +208,23 @@ function App() {
     <div className={`app-shell ${themeMode}`}>
       <header className="app-header">
         <div className="app-header-text">
-          <h1>Music Player</h1>
+          <div className="app-title-row">
+            <h1>Music Player</h1>
+            <div className="space-loader" aria-hidden="true">
+              <div className="planet" />
+              <div className="ring" />
+              <div className="orbit">
+                <div className="satellite" />
+              </div>
+              <div className="stars">
+                <span className="star star-1" />
+                <span className="star star-2" />
+                <span className="star star-3" />
+                <span className="star star-4" />
+                <span className="star star-5" />
+              </div>
+            </div>
+          </div>
           <p className="app-subtitle">Manage and enjoy your music</p>
         </div>
         <div className="theme-switch-wrapper">
@@ -280,8 +276,6 @@ function App() {
           <CurrentSongCard song={currentSong} status={status} />
           <PlayerControls
             onPlay={handlePlay}
-            onPause={handlePause}
-            onResume={handleResume}
             onStop={handleStop}
             onNext={handleNext}
             onPrevious={handlePrevious}

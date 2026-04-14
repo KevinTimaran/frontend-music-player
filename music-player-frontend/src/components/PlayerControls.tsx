@@ -2,8 +2,6 @@ import { type CSSProperties } from 'react'
 
 interface PlayerControlsProps {
   onPlay: () => void
-  onPause: () => void
-  onResume: () => void
   onStop: () => void
   onNext: () => void
   onPrevious: () => void
@@ -38,8 +36,6 @@ const createSliderStyle = (valuePercentage: number): CSSProperties => {
 
 export function PlayerControls({
   onPlay,
-  onPause,
-  onResume,
   onStop,
   onNext,
   onPrevious,
@@ -51,13 +47,24 @@ export function PlayerControls({
   duration,
   volume,
 }: PlayerControlsProps) {
-  const isPlaying = status === 'PLAYING'
-  const isPaused = status === 'PAUSED'
-  const isStopped = status === 'STOPPED'
+  const isPlaying = status === 'PLAYING' || status === 'RESUMED'
   const safeDuration = Number.isFinite(duration) ? Math.max(duration, 0) : 0
   const safeCurrentTime = Number.isFinite(currentTime) ? Math.max(currentTime, 0) : 0
   const clampedCurrentTime = safeDuration > 0 ? Math.min(safeCurrentTime, safeDuration) : safeCurrentTime
   const progressPercent = safeDuration > 0 ? (clampedCurrentTime / safeDuration) * 100 : 0
+
+  const handlePlayStopToggle = (): void => {
+    if (!hasSongs) {
+      return
+    }
+
+    if (isPlaying) {
+      onStop()
+      return
+    }
+
+    onPlay()
+  }
 
   return (
     <section className="playback-card">
@@ -133,16 +140,28 @@ export function PlayerControls({
             <span aria-hidden="true">⏮️</span>
             <span>Previous</span>
           </button>
-          <button
-            type="button"
-            className={`media-button primary ${isPlaying ? 'is-active' : ''}`}
-            onClick={onPlay}
-            disabled={!hasSongs || isPlaying}
-            title="Play current song"
+          <label
+            className={`container media-button primary play-stop-toggle ${isPlaying ? 'is-active' : ''} ${!hasSongs ? 'is-disabled' : ''}`}
+            role="button"
+            tabIndex={hasSongs ? 0 : -1}
+            aria-label={isPlaying ? 'Stop playback' : 'Play current song'}
+            onClick={handlePlayStopToggle}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault()
+                handlePlayStopToggle()
+              }
+            }}
           >
-            <span aria-hidden="true">▶️</span>
-            <span>Play</span>
-          </button>
+            <input type="checkbox" checked={isPlaying} readOnly />
+            <svg className="play" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M8 6L19 12L8 18V6Z" fill="currentColor" />
+            </svg>
+            <svg className="pause" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="8" y="8" width="8" height="8" rx="1.5" fill="currentColor" />
+            </svg>
+            <span className="toggle-label">{isPlaying ? 'Stop' : 'Play'}</span>
+          </label>
           <button
             type="button"
             className="media-button primary"
@@ -152,39 +171,6 @@ export function PlayerControls({
           >
             <span aria-hidden="true">⏭️</span>
             <span>Next</span>
-          </button>
-        </div>
-
-        <div className="controls-row">
-          <button
-            type="button"
-            className={`media-button secondary ${isPaused ? 'is-active' : ''}`}
-            onClick={onPause}
-            disabled={!hasSongs || !isPlaying}
-            title="Pause playback"
-          >
-            <span aria-hidden="true">⏸️</span>
-            <span>Pause</span>
-          </button>
-          <button
-            type="button"
-            className="media-button secondary"
-            onClick={onResume}
-            disabled={!hasSongs || !isPaused}
-            title="Resume playback"
-          >
-            <span aria-hidden="true">⏵</span>
-            <span>Resume</span>
-          </button>
-          <button
-            type="button"
-            className={`media-button secondary ${isStopped ? 'is-active' : ''}`}
-            onClick={onStop}
-            disabled={!hasSongs || isStopped}
-            title="Stop playback"
-          >
-            <span aria-hidden="true">⏹️</span>
-            <span>Stop</span>
           </button>
         </div>
       </div>

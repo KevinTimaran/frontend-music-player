@@ -143,10 +143,150 @@ body {
   margin-bottom: var(--spacing-xs);
 }
 
+.app-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
 .app-subtitle {
   font-size: 0.875rem;
   color: var(--text-secondary);
   font-weight: 400;
+}
+
+/* From Uiverse.io by IsaiahAltDelete - adapted */
+.space-loader {
+  width: 48px;
+  height: 48px;
+  position: relative;
+  background-color: color-mix(in srgb, var(--bg-primary) 75%, #000);
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 0 16px color-mix(in srgb, #ffffff 14%, transparent);
+}
+
+.space-loader .planet {
+  width: 19px;
+  height: 19px;
+  background: radial-gradient(circle at 30% 30%, #fff, #888);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px color-mix(in srgb, #ffffff 28%, transparent);
+}
+
+.space-loader .ring {
+  width: 30px;
+  height: 30px;
+  border: 2px solid color-mix(in srgb, #ffffff 35%, transparent);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotateX(75deg) rotateY(15deg);
+  animation: rotate-space 12s linear infinite;
+}
+
+.space-loader .orbit {
+  width: 38px;
+  height: 38px;
+  border: 1px dashed color-mix(in srgb, #ffffff 35%, transparent);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.space-loader .satellite {
+  width: 5px;
+  height: 5px;
+  background-color: #fff;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: orbit-space 8s linear infinite;
+}
+
+.space-loader .stars {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  animation: twinkle-space 4s ease-in-out infinite;
+}
+
+.space-loader .star {
+  position: absolute;
+  background-color: #fff;
+  border-radius: 50%;
+}
+
+.space-loader .star-1 {
+  width: 2px;
+  height: 2px;
+  top: 7px;
+  left: 10px;
+}
+
+.space-loader .star-2 {
+  width: 2px;
+  height: 2px;
+  top: 12px;
+  right: 11px;
+}
+
+.space-loader .star-3 {
+  width: 1.5px;
+  height: 1.5px;
+  bottom: 10px;
+  left: 8px;
+}
+
+.space-loader .star-4 {
+  width: 2px;
+  height: 2px;
+  bottom: 12px;
+  right: 10px;
+}
+
+.space-loader .star-5 {
+  width: 1.5px;
+  height: 1.5px;
+  top: 5px;
+  right: 20px;
+}
+
+@keyframes rotate-space {
+  0% {
+    transform: translate(-50%, -50%) rotateX(75deg) rotateY(15deg) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotateX(75deg) rotateY(15deg) rotate(360deg);
+  }
+}
+
+@keyframes orbit-space {
+  0% {
+    transform: rotate(0deg) translateX(19px) rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg) translateX(19px) rotate(-360deg);
+  }
+}
+
+@keyframes twinkle-space {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.8;
+  }
 }
 
 .theme-switch-wrapper {
@@ -1384,6 +1524,63 @@ body {
   background-color: #c0392b;
 }
 
+/* From Uiverse.io by vinodjangid07 - adapted */
+.playlist-actions .button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: rgb(20, 20, 20);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 20px color-mix(in srgb, #000 16%, transparent);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+}
+
+.playlist-actions .svgIcon {
+  width: 12px;
+  transition-duration: 0.3s;
+}
+
+.playlist-actions .svgIcon path {
+  fill: #fff;
+}
+
+.playlist-actions .button:hover {
+  width: 140px;
+  border-radius: 50px;
+  transition-duration: 0.3s;
+  background-color: rgb(255, 69, 69);
+  align-items: center;
+}
+
+.playlist-actions .button:hover .svgIcon {
+  width: 50px;
+  transition-duration: 0.3s;
+  transform: translateY(60%);
+}
+
+.playlist-actions .button::before {
+  position: absolute;
+  top: -20px;
+  content: 'Delete';
+  color: #fff;
+  transition-duration: 0.3s;
+  font-size: 2px;
+}
+
+.playlist-actions .button:hover::before {
+  font-size: 13px;
+  opacity: 1;
+  transform: translateY(30px);
+  transition-duration: 0.3s;
+}
+
 .move-group {
   display: flex;
   gap: var(--spacing-sm);
@@ -2249,6 +2446,75 @@ body {
 
 .media-button:disabled::after {
   content: none;
+}
+
+/* From Uiverse.io by bbaginuk - adapted */
+.play-stop-toggle.container {
+  --color: #ffffff;
+  --size: 1.35rem;
+  position: relative;
+  cursor: pointer;
+  font-size: var(--size);
+  user-select: none;
+  fill: var(--color);
+}
+
+.play-stop-toggle.container .play,
+.play-stop-toggle.container .pause {
+  width: 1.3em;
+  height: 1.3em;
+  animation: keyframes-fill 0.3s;
+  flex: 0 0 auto;
+}
+
+.play-stop-toggle.container .play {
+  position: absolute;
+  left: 0.95rem;
+}
+
+.play-stop-toggle.container .pause {
+  position: absolute;
+  left: 0.95rem;
+  display: none;
+}
+
+.play-stop-toggle.container input:checked ~ .play {
+  display: none;
+}
+
+.play-stop-toggle.container input:checked ~ .pause {
+  display: block;
+}
+
+.play-stop-toggle.container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.play-stop-toggle.container .toggle-label {
+  margin-left: 1.6rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.play-stop-toggle.container.is-disabled {
+  pointer-events: none;
+  opacity: 0.45;
+}
+
+@keyframes keyframes-fill {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+
+  50% {
+    transform: scale(1.1);
+  }
 }
 
 .playlist-drop-zone {
